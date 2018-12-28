@@ -1,16 +1,9 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import Shelf from './Shelf'
 
-class Main extends Component {
-
-  static propTypes = {
-      books: PropTypes.array.isRequired,
-      updateShelf: PropTypes.func.isRequired };
-
-    render() {
-      const { books, updateShelf } = this.props
+const Main = ({books, updateShelf}) => {
         return (
             <div className="list-books">
                 <div className="list-books-title">
@@ -44,6 +37,8 @@ class Main extends Component {
             </div>
         )
     }
-}
+    Main.propTypes = {
+        books: PropTypes.array.isRequired,
+        updateShelf: PropTypes.func.isRequired }
 
 export default Main

@@ -1,14 +1,16 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 
-class Book extends Component {
+      const Book = ({ book, updateShelf }) => {
 
-  static propTypes = {
-         book: PropTypes.object.isRequired,
-         updateShelf: PropTypes.func.isRequired };
+        let authors = []
 
-    render() {
-      const { book, updateShelf } = this.props
+        if(book.authors){
+            for(let author of book.authors) {
+            authors.push(`${author} `)
+            }
+        }
+
         return (
             <li>
                 <div className="book">
@@ -27,11 +29,13 @@ class Book extends Component {
                     </div>
                 </div>
                 <div className="book-title">{ book.title ? book.title : ""}</div>
-                <div className="book-authors">{ book.authors ? book.authors[0] : "" }</div>
+                <div className="book-authors">{ book.authors ? authors : "" }</div>
                 </div>
             </li>
         )
     }
-}
+    Book.propTypes = {
+    book: PropTypes.object.isRequired,
+    updateShelf: PropTypes.func.isRequired }
 
 export default Book

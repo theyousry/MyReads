@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import * as BooksAPI from './BooksAPI'
 import './App.css'
-import { Route } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 import Search from './Search'
 import Main from './Main'
 
@@ -15,7 +15,7 @@ class BooksApp extends Component {
         const books = await BooksAPI.getAll()
         this.setState( { books } )
     }
-
+    // passing updates for each component
     updateShelf = (book, shelf) => {
        BooksAPI.update(book, shelf)
         .then((response) => {
@@ -25,11 +25,14 @@ class BooksApp extends Component {
               return (x.id !== book.id)
             }).concat([book])
           }))
-        }).then(() => shelf !== 'none' ? alert(`${book.title} HAS BEEN MOVED!`) : null)
+        }).catch(error => {
+          console.log(error);
+        })
       }
   render() {
     return (
       <div className="app">
+      <Switch>
       <Route exact path='/' render={() => (
         <Main
           books={this.state.books}
@@ -42,9 +45,18 @@ class BooksApp extends Component {
         updateShelf={this.updateShelf}
         />
       )} />
+      <Route component={NoResults} />
+      </Switch>
       </div>
     )
   }
 }
+
+// error page
+const NoResults = ({ loc }) => (
+  <div>
+    <h3>There is no matches for <code>{loc.pathname}</code></h3>
+  </div>
+)
 
 export default BooksApp

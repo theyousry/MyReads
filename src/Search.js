@@ -13,29 +13,48 @@ class Search extends Component {
   };
 
     state = {
-     books: [],
-     query: ''
+      results: [],
+      query: '',
+      books: []
+   }
+
+   async componentDidMount() {
+    const books = await BooksAPI.getAll()
+     this.setState( { books } )
    }
 
      handleChange = async e => {
-      const query = e.target.value.trim()
+       const query = e.target.value
       this.setState( { query } )
 
        if (query === '' || query === undefined) {
             return this.setState({
-               books: []
+               results: []
              })
            }
       else {
-            const results = await BooksAPI.search(query)
-            this.setState( { books: results } )
+        await BooksAPI.search(query).then(results => {
+          if(!results || results.hasOwnProperty('error')) {
+            this.setState({ results: [] })
+          } else {
+              for(let result of results){
+                result.shelf = 'none'
+                for(let book of this.state.books){
+                  if(book.id === result.id){
+                    result.shelf = book.shelf
+                  }
+                }
+              }
+            this.setState( { results } )
            }
-      }
+      })
+     }
+}
 
     render() {
 
       const { updateShelf } = this.props;
-      const { books } = this.state;
+      const { results } = this.state;
 
         return (
             <div className="search-books">
@@ -52,13 +71,14 @@ class Search extends Component {
             </div>
             <div className="search-books-results">
               <ol className="books-grid">
-              {books.length > 0 && books.map(book =>
+              {results.length > 0 ? results.map(book =>
                 <Book
                   book={book}
                   key={book.id}
                   updateShelf={updateShelf}
                 />
-              )}
+              ) : "THERE IS NO RESULTS HERE!"
+            }
               </ol>
             </div>
           </div>
