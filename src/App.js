@@ -14,9 +14,6 @@ class BooksApp extends Component {
     async componentDidMount() {
         const books = await BooksAPI.getAll()
         this.setState( { books } )
-              console.log('currently reading: ', books.filter(book => book.shelf === "currentlyReading"))
-              console.log('want to read: ', books.filter(book => book.shelf === "wantToRead"))
-              console.log('read: ', books.filter(book => book.shelf === "read"))
     }
 
     updateShelf = (book, shelf) => {
@@ -28,7 +25,7 @@ class BooksApp extends Component {
               return (x.id !== book.id)
             }).concat([book])
           }))
-        })
+        }).then(() => shelf !== 'none' ? alert(`${book.title} HAS BEEN MOVED!`) : null)
       }
   render() {
     return (
@@ -40,7 +37,10 @@ class BooksApp extends Component {
         />
       )} />
       <Route path='/search' render={() => (
-        <Search />
+        <Search
+        books={this.state.books}
+        updateShelf={this.updateShelf}
+        />
       )} />
       </div>
     )

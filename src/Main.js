@@ -1,8 +1,14 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types'
 import Shelf from './Shelf'
 
 class Main extends Component {
+
+  static propTypes = {
+      books: PropTypes.array.isRequired,
+      updateShelf: PropTypes.func.isRequired };
+
     render() {
       const { books, updateShelf } = this.props
         return (
@@ -26,7 +32,7 @@ class Main extends Component {
                     />
                     <Shelf
                         section="Read"
-                        books={books.filter((book) => book.shelf === 'currentlyReading'
+                        books={books.filter((book) => book.shelf === 'read'
                             )}
                         updateShelf={updateShelf}
                     />
